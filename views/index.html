@@ -1,13 +1,51 @@
 {{define "content"}}
 
 <div class="flex justify-center">
-    <div class="w-1/2 px-2">
+    <div class="w-1/2 px-2 space-y-4">
+
         <div class="card">
             <h1 class="mb-6 text-2xl">
-                Uptime
+                Last 24 hours
             </h1>
+            <div class="flex w-full">
+                <div class="w-1/3 space-y-2 text-center">
+                    <div class="text-4xl">{{.stats.ChecksLast24Hours}}</div>
+                    <div class="text-gray-500 text-sm">Checks</div>
+                </div>
+                <div class="w-1/3 space-y-2 text-center">
+                    <div class="text-4xl text-green-600">{{.stats.SuccessLast24Hours}}</div>
+                    <div class="text-gray-500 text-sm">Success</div>
+                </div>
+                <div class="w-1/3 space-y-2 text-center">
+                    <div class="text-4xl text-red-600">{{.stats.ErrorLast24Hours}}</div>
+                    <div class="text-gray-500 text-sm">Errors</div>
+                </div>
+            </div>
+            <div id="chart-24h" class="mt-6" style="width: 100%; height: 250px;"></div>
+        </div>
+
+        <div class="card">
+            <h1 class="mb-6 text-2xl">
+                Last 7 days
+            </h1>
+            <div class="flex w-full">
+                <div class="w-1/3 space-y-2 text-center">
+                    <div class="text-4xl">{{.stats.ChecksLast7Days}}</div>
+                    <div class="text-gray-500 text-sm">Checks</div>
+                </div>
+                <div class="w-1/3 space-y-2 text-center">
+                    <div class="text-4xl text-green-600">{{.stats.SuccessLast7Days}}</div>
+                    <div class="text-gray-500 text-sm">Success</div>
+                </div>
+                <div class="w-1/3 space-y-2 text-center">
+                    <div class="text-4xl text-red-600">{{.stats.ErrorLast7Days}}</div>
+                    <div class="text-gray-500 text-sm">Errors</div>
+                </div>
+            </div>
+            <div id="chart-7d" class="mt-6" style="width: 600px; height: 250px;"></div>
         </div>
     </div>
+
     <div class="w-1/2 px-2">
         <div class="card">
             <h1 class="mb-6 text-2xl">
@@ -43,9 +81,109 @@
                 </tbody>
             </table>
 
-
         </div>
     </div>
 </div>
+
+{{end}}
+
+{{define "scripts"}}
+
+<script defer>
+    const chartData24h = JSON.parse('{{.chart}}');
+    const chartData7d = JSON.parse('{{.chart}}');
+
+    const defaultOptions = {
+        animationDuration: 500,
+        animationEasing: 'quadraticInOut',
+        tooltip: {
+            trigger: 'axis',
+            showContent: false,
+        },
+        grid: {
+            top: 20,
+            bottom: 0,
+            left: 20,
+            right: 20,
+            containLabel: true,
+            borderWidth: 0,
+        },
+        legend: {
+            show: false,
+        },
+        xAxis: {
+            type: 'category',
+            axisLine: {
+                show: true,
+            },
+            axisLabel: {
+                show: true,
+            },
+            splitLine: {
+                show: true,
+            },
+            splitArea: {
+                show: true,
+            },
+        },
+        yAxis: {
+            type: 'value',
+            axisLine: {
+                show: true,
+            },
+            axisLabel: {
+                show: true,
+            },
+            splitLine: {
+                show: true,
+            },
+            splitArea: {
+                show: true,
+            },
+        },
+        series: [
+            {
+                type: 'line',
+                name: 'viewer',
+                smooth: true,
+                large: true,
+                showSymbol: false,
+                lineStyle: {
+                    width: 0,
+                },
+                areaStyle: {
+                    //opacity: 0.8,
+                    //color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    //    { offset: 0, color: 'rgb(45, 212, 191)' },
+                    //    { offset: 1, color: 'rgb(20, 184, 166)' },
+                    //]),
+                },
+                emphasis: {
+                    focus: 'series',
+                },
+            },
+        ],
+    }
+    const chart24h = echarts.init(document.getElementById('chart-24h'));
+    chart24h.setOption({
+        ...defaultOptions,
+        xAxis: {
+            ...defaultOptions.xAxis,
+            data: chartData24h.points.map(check => check.date),
+        },
+        series: [
+            {
+                ...defaultOptions.series[0],
+                data: chartData24h.points.map(check => check.value),
+            }
+        ],
+    });
+
+    console.log(chart24h)
+
+    const chart7d = echarts.init(document.getElementById('chart-7d'));
+    chart7d.setOption(defaultOptions);
+</script>
+
 
 {{end}}
