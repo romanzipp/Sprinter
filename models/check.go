@@ -9,6 +9,7 @@ import (
 
 type Check struct {
 	gorm.Model
+	CheckId    string
 	Addr       string
 	IP         string
 	PacketLoss float64
@@ -16,7 +17,7 @@ type Check struct {
 	Success    bool
 }
 
-func ExecPingCheck(host string, db *gorm.DB) {
+func ExecPingCheck(host string, id string, db *gorm.DB) {
 	pinger, err := ping.NewPinger(host)
 	if err != nil {
 		log.Error().Msgf("error creating pinger for host %s", host)
@@ -37,6 +38,7 @@ func ExecPingCheck(host string, db *gorm.DB) {
 	log.Debug().Msgf("ping {host: %s, ip: %s, packet-loss: %.2f, rtt: %d}", stats.Addr, stats.IPAddr, stats.PacketLoss, stats.AvgRtt)
 
 	check := Check{
+		CheckId:    id,
 		Addr:       stats.Addr,
 		IP:         stats.IPAddr.String(),
 		PacketLoss: stats.PacketLoss,

@@ -5,6 +5,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/logger"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/romanzipp/sprinter/config"
 	"github.com/romanzipp/sprinter/controllers"
@@ -94,9 +95,10 @@ func makeRouter(db *gorm.DB) *gin.Engine {
 
 func makeCheckScheduler(db *gorm.DB, conf config.Config) {
 	for {
+		id := uuid.NewString()
 		for _, host := range conf.PingHosts {
 			log.Info().Msgf("ping check %s", host)
-			go models.ExecPingCheck(host, db)
+			go models.ExecPingCheck(host, id, db)
 		}
 
 		time.Sleep(time.Duration(conf.Interval) * time.Second)
