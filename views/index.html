@@ -42,7 +42,7 @@
                     <div class="text-gray-500 text-sm">Errors</div>
                 </div>
             </div>
-            <div id="chart-7d" class="mt-6" style="width: 600px; height: 250px;"></div>
+            <div id="chart-7d" class="mt-6" style="width: 100%; height: 250px;"></div>
         </div>
     </div>
 
@@ -63,7 +63,7 @@
                 </thead>
                 <tbody>
                 {{range .checks}}
-                <tr class="{{if .Success}}text-green-600{{else}}text-red-500{{end}}">
+                <tr class="{{if not .Success}}text-red-500{{end}}">
                     <td>
                         {{.CreatedAt.Format "2006-01-02 15:04"}}
                     </td>
@@ -90,8 +90,28 @@
 {{define "scripts"}}
 
 <script defer>
-    const chartData24h = JSON.parse('{{.chart}}');
-    const chartData7d = JSON.parse('{{.chart}}');
+    const chartData = JSON.parse('{{.chart}}');
+
+    const getDowntime = (points) => {
+        const downtimes = [];
+
+        let lastDownDate = null;
+        points.forEach((point, index) => {
+            if (point.value === 0 && lastDownDate === null) {
+                lastDownDate = point.date;
+            }
+
+            if ((point.value !== 0 && lastDownDate !== null) || points.length === index + 1) {
+                downtimes.push({
+                    from: lastDownDate,
+                    to: point.date,
+                });
+                lastDownDate = null;
+            }
+        });
+
+        return downtimes;
+    };
 
     const defaultOptions = {
         animationDuration: 500,
@@ -138,7 +158,7 @@
                 show: true,
             },
             splitArea: {
-                show: true,
+                show: false,
             },
         },
         series: [
@@ -164,25 +184,66 @@
             },
         ],
     }
+
     const chart24h = echarts.init(document.getElementById('chart-24h'));
     chart24h.setOption({
         ...defaultOptions,
         xAxis: {
             ...defaultOptions.xAxis,
-            data: chartData24h.points.map(check => check.date),
+            data: chartData['24h'].map(check => check.date),
+            axisLabel: {
+                show: true,
+                formatter: (label) => (new Date(label)).toLocaleTimeString(),
+            },
         },
         series: [
             {
                 ...defaultOptions.series[0],
-                data: chartData24h.points.map(check => check.value),
+                data: chartData['24h'].map(check => check.value),
+                markArea: {
+                    itemStyle: {
+                        color: 'rgba(255, 0, 0, 0.4)',
+                    },
+                    data: getDowntime(chartData['24h']).map(item => {
+                        return [
+                            {xAxis: item.from},
+                            {xAxis: item.to},
+                        ]
+                    })
+                }
             }
         ],
     });
 
-    console.log(chart24h)
-
     const chart7d = echarts.init(document.getElementById('chart-7d'));
-    chart7d.setOption(defaultOptions);
+    chart7d.setOption({
+        ...defaultOptions,
+        xAxis: {
+            ...defaultOptions.xAxis,
+            data: chartData['7d'].map(check => check.date),
+            axisLabel: {
+                show: true,
+                formatter: (label) => (new Date(label)).toLocaleDateString(),
+            },
+        },
+        series: [
+            {
+                ...defaultOptions.series[0],
+                data: chartData['7d'].map(check => check.value),
+                markArea: {
+                    itemStyle: {
+                        color: 'rgba(255, 0, 0, 0.4)',
+                    },
+                    data: getDowntime(chartData['7d']).map(item => {
+                        return [
+                            {xAxis: item.from},
+                            {xAxis: item.to},
+                        ]
+                    })
+                }
+            }
+        ],
+    });
 </script>
 
 

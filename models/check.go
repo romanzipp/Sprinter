@@ -20,10 +20,11 @@ type Check struct {
 func ExecPingCheck(host string, id string, db *gorm.DB) {
 	pinger, err := ping.NewPinger(host)
 	if err != nil {
-		log.Error().Msgf("error creating pinger for host %s", host)
+		log.Error().Msgf("error creating pinger for host %s: %s", host, err)
 		return
 	}
 
+	pinger.SetPrivileged(true)
 	pinger.Count = 1
 	pinger.Timeout = 5 * time.Second
 	pinger.Debug = true

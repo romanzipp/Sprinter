@@ -24,12 +24,13 @@ type ChartDataPoint struct {
 }
 
 type ChartData struct {
-	Points []ChartDataPoint `json:"points"`
+	Points24h []ChartDataPoint `json:"24h"`
+	Points7d  []ChartDataPoint `json:"7d"`
 }
 
 func IndexController(c *gin.Context, db *gorm.DB) {
 	var checks []models.Check
-	db.Order("created_at DESC").Limit(200).Find(&checks)
+	db.Order("created_at DESC").Limit(100).Find(&checks)
 
 	stats := Stats{}
 
@@ -41,18 +42,28 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 	db.Table("checks").Where("created_at >= ?", time.Now().Add(-time.Hour*24*7)).Where("success = 1").Count(&stats.SuccessLast7Days)
 	db.Table("checks").Where("created_at >= ?", time.Now().Add(-time.Hour*24*7)).Where("success = 0").Count(&stats.ErrorLast7Days)
 
+	var checks24h []models.Check
+	var checks7d []models.Check
+
+	db.Order("created_at DESC").Group("check_id").Where("created_at >= ?", time.Now().Add(-time.Hour*24)).Find(&checks24h)
+	db.Order("created_at DESC").Group("check_id").Where("created_at >= ?", time.Now().Add(-time.Hour*24*7)).Find(&checks7d)
+
 	chartData := ChartData{}
 
-	for _, v := range checks {
-		chartData.Points = append(chartData.Points, ChartDataPoint{v.CreatedAt, int64(v.PacketLoss)})
+	for _, v := range checks24h {
+		chartData.Points24h = append(chartData.Points24h, ChartDataPoint{v.CreatedAt, int64(v.Latency / time.Millisecond)})
 	}
 
-	ch1, _ := json.Marshal(chartData)
+	for _, v := range checks7d {
+		chartData.Points7d = append(chartData.Points7d, ChartDataPoint{v.CreatedAt, int64(v.Latency / time.Millisecond)})
+	}
+
+	chartDataJson, _ := json.Marshal(chartData)
 
 	c.HTML(http.StatusOK, "index", gin.H{
 		"title":  "Home",
 		"checks": checks,
 		"stats":  stats,
-		"chart":  string(ch1),
+		"chart":  string(chartDataJson),
 	})
 }
