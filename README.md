@@ -1,6 +1,6 @@
 # Sprinter
 
-⚠️ This project is a work in progress ⚠️
+![](preview.png)
 
 ## Features
 
