@@ -7,7 +7,7 @@
 - Monitor network uptime
 - Pings & Speed test
 
-Built with [Go](https://go.dev/)and [SQLite](https://sqlite.org/).
+Built with [Go](https://go.dev/) and [SQLite](https://sqlite.org/).
 
 ## Docker
 

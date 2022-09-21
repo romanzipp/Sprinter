@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/logger"
@@ -64,7 +65,10 @@ func makeDb() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&models.Check{})
+	err = db.AutoMigrate(&models.Check{})
+	if err != nil {
+		panic(fmt.Sprintf("error migrating db: %s", err))
+	}
 
 	return db
 }
