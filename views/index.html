@@ -101,7 +101,7 @@
                 lastDownDate = point.date;
             }
 
-            if ((point.value !== 0 && lastDownDate !== null) || points.length === index + 1) {
+            if (lastDownDate !== null && (point.value !== 0 || points.length === index + 1)) {
                 downtimes.push({
                     from: lastDownDate,
                     to: point.date,
@@ -110,7 +110,23 @@
             }
         });
 
-        return downtimes;
+        if (downtimes.length === 0) {
+            return;
+        }
+
+        console.log(downtimes)
+
+        return {
+            itemStyle: {
+                color: 'rgba(255, 0, 0, 0.2)',
+            },
+            data: downtimes.map(item => {
+                return [
+                    {xAxis: item.from},
+                    {xAxis: item.to},
+                ]
+            })
+        };
     };
 
     const defaultOptions = {
@@ -174,8 +190,8 @@
                 areaStyle: {
                     opacity: 0.8,
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: 'rgb(45, 212, 191)' },
-                        { offset: 1, color: 'rgb(20, 184, 166)' },
+                        {offset: 0, color: 'rgb(45, 212, 191)'},
+                        {offset: 1, color: 'rgb(20, 184, 166)'},
                     ]),
                 },
                 emphasis: {
@@ -200,17 +216,7 @@
             {
                 ...defaultOptions.series[0],
                 data: chartData['24h'].map(check => check.value),
-                markArea: {
-                    itemStyle: {
-                        color: 'rgba(255, 0, 0, 0.2)',
-                    },
-                    data: getDowntime(chartData['24h']).map(item => {
-                        return [
-                            {xAxis: item.from},
-                            {xAxis: item.to},
-                        ]
-                    })
-                }
+                markArea: getDowntime(chartData['24h'])
             }
         ],
     });
@@ -230,17 +236,7 @@
             {
                 ...defaultOptions.series[0],
                 data: chartData['7d'].map(check => check.value),
-                markArea: {
-                    itemStyle: {
-                        color: 'rgba(255, 0, 0, 0.2)',
-                    },
-                    data: getDowntime(chartData['7d']).map(item => {
-                        return [
-                            {xAxis: item.from},
-                            {xAxis: item.to},
-                        ]
-                    })
-                }
+                markArea: getDowntime(chartData['7d'])
             }
         ],
     });
