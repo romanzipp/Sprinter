@@ -140,10 +140,10 @@
                 show: true,
             },
             splitLine: {
-                show: true,
+                show: false,
             },
             splitArea: {
-                show: true,
+                show: false,
             },
         },
         yAxis: {
@@ -155,7 +155,7 @@
                 show: true,
             },
             splitLine: {
-                show: true,
+                show: false,
             },
             splitArea: {
                 show: false,
@@ -172,11 +172,11 @@
                     width: 0,
                 },
                 areaStyle: {
-                    //opacity: 0.8,
-                    //color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    //    { offset: 0, color: 'rgb(45, 212, 191)' },
-                    //    { offset: 1, color: 'rgb(20, 184, 166)' },
-                    //]),
+                    opacity: 0.8,
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgb(45, 212, 191)' },
+                        { offset: 1, color: 'rgb(20, 184, 166)' },
+                    ]),
                 },
                 emphasis: {
                     focus: 'series',
@@ -202,7 +202,7 @@
                 data: chartData['24h'].map(check => check.value),
                 markArea: {
                     itemStyle: {
-                        color: 'rgba(255, 0, 0, 0.4)',
+                        color: 'rgba(255, 0, 0, 0.2)',
                     },
                     data: getDowntime(chartData['24h']).map(item => {
                         return [
@@ -232,7 +232,7 @@
                 data: chartData['7d'].map(check => check.value),
                 markArea: {
                     itemStyle: {
-                        color: 'rgba(255, 0, 0, 0.4)',
+                        color: 'rgba(255, 0, 0, 0.2)',
                     },
                     data: getDowntime(chartData['7d']).map(item => {
                         return [
