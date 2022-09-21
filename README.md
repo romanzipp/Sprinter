@@ -21,7 +21,7 @@ docker build -t sprinter:latest .
 
 ```shell
 docker run \
-  -v "$(pwd)/data.db:/data.db" \
+  -v "$(pwd)/data/:/data/" \
   -v "$(pwd)/.env:/.env" \
   -p 8080:8080 \
   sprinter:latest
