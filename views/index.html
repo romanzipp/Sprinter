@@ -1,0 +1,51 @@
+{{define "content"}}
+
+<div class="flex justify-center">
+    <div class="w-1/2 px-2">
+        <div class="card">
+            <h1 class="mb-6 text-2xl">
+                Uptime
+            </h1>
+        </div>
+    </div>
+    <div class="w-1/2 px-2">
+        <div class="card">
+            <h1 class="mb-6 text-2xl">
+                Latest Checks
+            </h1>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Host</th>
+                    <th>Latency</th>
+                    <th>Packet Loss</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .checks}}
+                <tr class="{{if .Success}}text-green-600{{else}}text-red-500{{end}}">
+                    <td>
+                        {{.CreatedAt.Format "2006-01-02 15:04"}}
+                    </td>
+                    <td>
+                        <span title="{{.IP}}">{{.Addr}}</span>
+                    </td>
+                    <td>
+                        {{.Latency}}
+                    </td>
+                    <td>
+                        {{.PacketLoss}} %
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+
+{{end}}

@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    p {
+        @apply text-sm text-gray-500
+    }
+
+    form {
+        @apply block
+    }
+
+    label {
+        @apply block text-xs mb-2 font-medium text-gray-500
+    }
+
+    label.required::after {
+        content: '*';
+        @apply ml-1 text-red-500
+    }
+
+    input[type="text"], input[type="password"], select, textarea {
+        @apply block w-full bg-white rounded shadow-sm border border-gray-300 px-3 py-2 text-sm
+    }
+
+    input[type="text"]:disabled, input[type="password"]:disabled, select:disabled, textarea:disabled,
+    input[type="text"]:disabled::placeholder, input[type="password"]:disabled::placeholder, select:disabled::placeholder, textarea:disabled::placeholder {
+        @apply text-gray-200 cursor-not-allowed
+    }
+
+    input[type="text"]:focus-visible {
+        @apply outline-offset-2 outline outline-pink-400 outline-2
+    }
+
+    .button {
+        @apply px-6 py-2 text-sm rounded font-medium transition-colors duration-150 shadow
+    }
+
+    .button.button-primary {
+        @apply bg-pink-400 text-white shadow-pink-200
+    }
+
+    .button.button-primary:hover {
+        @apply bg-pink-500
+    }
+
+    .card {
+        @apply p-6 bg-white shadow rounded-md
+    }
+
+    .alert {
+        @apply p-3 text-sm font-medium rounded-md leading-normal border-2
+    }
+
+    .alert::before {
+        @apply block mb-1 text-xs font-semibold opacity-70 tracking-wider
+    }
+
+    .alert.alert-success {
+        @apply bg-green-50 text-green-500 border-green-200
+    }
+
+    .alert.alert-success::before {
+        content: 'SUCCESS';
+    }
+
+    .alert.alert-info {
+        @apply bg-blue-50 text-blue-500 border-blue-200
+    }
+
+    .alert.alert-info::before {
+        content: 'INFO';
+    }
+
+    .alert.alert-error {
+        @apply bg-red-50 text-red-500 border-red-200
+    }
+
+    .alert.alert-error::before {
+        content: 'ERROR';
+    }
+
+    .empty {
+        @apply p-12 border-4 border-dashed border-gray-300 text-center text-2xl text-gray-400 rounded-xl
+    }
+
+    .link {
+        @apply font-medium underline text-pink-700 hover:text-pink-900
+    }
+
+    table {
+        @apply w-full text-left
+    }
+
+    table thead {
+        @apply rounded-md overflow-hidden
+    }
+
+    table thead tr th {
+        @apply bg-gray-100 px-2 py-2 text-xs text-gray-500 font-medium uppercase tracking-wide
+    }
+
+    table thead tr th:first-child {
+        @apply rounded-tl-md
+    }
+
+    table thead tr th:last-child {
+        @apply rounded-tr-md
+    }
+
+    table tbody {
+        @apply text-sm
+    }
+
+    table tbody tr td {
+        @apply py-2 px-2 bg-gray-50
+    }
+
+    table tbody tr td:first-child {
+        @apply rounded-bl-md
+    }
+
+    table tbody tr td:last-child {
+        @apply rounded-br-md
+    }
+
+    table tbody tr:not(:last-child) td {
+        @apply border-b border-gray-100
+    }
+}
