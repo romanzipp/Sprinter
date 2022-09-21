@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/go-ping/ping"
+	"github.com/romanzipp/sprinter/config"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 	"time"
@@ -17,14 +18,17 @@ type Check struct {
 	Success    bool
 }
 
-func ExecPingCheck(host string, id string, db *gorm.DB) {
+func ExecPingCheck(host string, id string, conf config.Config, db *gorm.DB) {
 	pinger, err := ping.NewPinger(host)
 	if err != nil {
 		log.Error().Msgf("error creating pinger for host %s: %s", host, err)
 		return
 	}
 
-	pinger.SetPrivileged(true)
+	if conf.PingPrivileged {
+		pinger.SetPrivileged(true)
+	}
+
 	pinger.Count = 1
 	pinger.Timeout = 5 * time.Second
 	pinger.Debug = true

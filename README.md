@@ -40,7 +40,7 @@ docker run \
 #### Install dependencies
 
 ```
-go get
+go mod download
 ```
 
 #### Build & hot reload
@@ -48,6 +48,24 @@ go get
 ```shell
 gow -e=go,html run .
 ```
+
+### Frontend
+
+#### Install dependencies
+
+```
+yarn install
+```
+
+#### Build & hot reload
+
+```shell
+yarn watch
+```
+
+## Troubleshooting
+
+**macOS**: You will need to run the executable as root and enable privileged mode by setting `PING_PRIVILEGED` to true.
 
 ## License
 

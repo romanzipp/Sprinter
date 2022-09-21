@@ -52,8 +52,9 @@ func makeConfig() config.Config {
 	pingHosts := strings.Split(os.Getenv("PING_HOSTS"), ",")
 
 	return config.Config{
-		Interval:  interval,
-		PingHosts: pingHosts,
+		Interval:       interval,
+		PingHosts:      pingHosts,
+		PingPrivileged: os.Getenv("PING_PRIVILEGED") == "true",
 	}
 }
 
@@ -98,7 +99,7 @@ func makeCheckScheduler(db *gorm.DB, conf config.Config) {
 		id := uuid.NewString()
 		for _, host := range conf.PingHosts {
 			log.Info().Msgf("ping check %s", host)
-			go models.ExecPingCheck(host, id, db)
+			go models.ExecPingCheck(host, id, conf, db)
 		}
 
 		time.Sleep(time.Duration(conf.Interval) * time.Second)
