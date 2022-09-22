@@ -92,7 +92,65 @@
 <script defer>
     const chartData = JSON.parse('{{.chart}}');
 
-    const getDowntime = (points) => {
+    const defaultOptions = {
+        animationDuration: 500,
+        animationEasing: 'quadraticInOut',
+        tooltip: {
+            trigger: 'axis',
+            showContent: true,
+        },
+        grid: {
+            top: 20,
+            bottom: 0,
+            left: 20,
+            right: 20,
+            containLabel: true,
+            borderWidth: 0,
+        },
+        legend: {
+            show: false,
+        },
+        xAxis: {
+            type: 'time',
+            boundaryGap: false,
+            axisLine: {show: true},
+            axisLabel: {show: true},
+            splitLine: {show: false},
+            splitArea: {show: false},
+        },
+        yAxis: {
+            type: 'value',
+            axisLine: {show: true},
+            axisLabel: {show: true},
+            splitLine: {show: false},
+            splitArea: {show: false},
+        },
+        series: [
+            {
+                type: 'line',
+                name: 'Latency',
+                smooth: false,
+                large: true,
+                showSymbol: false,
+                lineStyle: {
+                    width: 1,
+                    color: 'rgb(35, 165, 148)',
+                },
+                areaStyle: {
+                    opacity: 0.6,
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        {offset: 0, color: 'rgb(45, 212, 191)'},
+                        {offset: 1, color: 'rgb(20, 184, 166)'},
+                    ]),
+                },
+                emphasis: {
+                    focus: 'series',
+                },
+            },
+        ],
+    }
+
+    const extractDowntime = (points) => {
         const downtimes = [];
 
         let lastDownDate = null;
@@ -114,8 +172,6 @@
             return;
         }
 
-        console.log(downtimes)
-
         return {
             itemStyle: {
                 color: 'rgba(255, 0, 0, 0.2)',
@@ -129,94 +185,18 @@
         };
     };
 
-    const defaultOptions = {
-        animationDuration: 500,
-        animationEasing: 'quadraticInOut',
-        tooltip: {
-            trigger: 'axis',
-            showContent: false,
-        },
-        grid: {
-            top: 20,
-            bottom: 0,
-            left: 20,
-            right: 20,
-            containLabel: true,
-            borderWidth: 0,
-        },
-        legend: {
-            show: false,
-        },
-        xAxis: {
-            type: 'category',
-            axisLine: {
-                show: true,
-            },
-            axisLabel: {
-                show: true,
-            },
-            splitLine: {
-                show: false,
-            },
-            splitArea: {
-                show: false,
-            },
-        },
-        yAxis: {
-            type: 'value',
-            axisLine: {
-                show: true,
-            },
-            axisLabel: {
-                show: true,
-            },
-            splitLine: {
-                show: false,
-            },
-            splitArea: {
-                show: false,
-            },
-        },
-        series: [
-            {
-                type: 'line',
-                name: 'viewer',
-                smooth: true,
-                large: true,
-                showSymbol: false,
-                lineStyle: {
-                    width: 0,
-                },
-                areaStyle: {
-                    opacity: 0.8,
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        {offset: 0, color: 'rgb(45, 212, 191)'},
-                        {offset: 1, color: 'rgb(20, 184, 166)'},
-                    ]),
-                },
-                emphasis: {
-                    focus: 'series',
-                },
-            },
-        ],
+    const transformData = (points) => {
+        return points.map(point => [+new Date(point.date), point.value]);
     }
 
     const chart24h = echarts.init(document.getElementById('chart-24h'));
     chart24h.setOption({
         ...defaultOptions,
-        xAxis: {
-            ...defaultOptions.xAxis,
-            data: chartData['24h'].map(check => check.date),
-            axisLabel: {
-                show: true,
-                formatter: (label) => (new Date(label)).toLocaleTimeString(),
-            },
-        },
         series: [
             {
                 ...defaultOptions.series[0],
-                data: chartData['24h'].map(check => check.value),
-                markArea: getDowntime(chartData['24h'])
+                data: transformData(chartData['24h']),
+                markArea: extractDowntime(chartData['24h'])
             }
         ],
     });
@@ -224,19 +204,11 @@
     const chart7d = echarts.init(document.getElementById('chart-7d'));
     chart7d.setOption({
         ...defaultOptions,
-        xAxis: {
-            ...defaultOptions.xAxis,
-            data: chartData['7d'].map(check => check.date),
-            axisLabel: {
-                show: true,
-                formatter: (label) => (new Date(label)).toLocaleDateString(),
-            },
-        },
         series: [
             {
                 ...defaultOptions.series[0],
-                data: chartData['7d'].map(check => check.value),
-                markArea: getDowntime(chartData['7d'])
+                data: transformData(chartData['7d']),
+                markArea: extractDowntime(chartData['7d'])
             }
         ],
     });

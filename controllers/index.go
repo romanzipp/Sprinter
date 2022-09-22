@@ -58,9 +58,15 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 		CAST(AVG(latency) AS INT) latency,
 		success, 
 		check_id,
-		strftime('%Y-%m-%dT%H:00:00.000', created_at) || '_' || success created_hour`)
+  		CASE success
+		  	WHEN 0
+				THEN check_id
+		  	WHEN 1
+				THEN strftime('%Y-%m-%dT%H:00:00.000', created_at) || '_' || success 
+			END group_col
+    `)
 	q.Order("created_at DESC")
-	q.Group("created_hour")
+	q.Group("group_col")
 	q.Where("created_at >= ?", time.Now().Add(-time.Hour*24*7))
 	q.Find(&checks7d)
 
