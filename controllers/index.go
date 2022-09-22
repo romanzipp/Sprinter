@@ -46,7 +46,23 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 	var checks7d []models.Check
 
 	db.Order("created_at DESC").Group("check_id").Where("created_at >= ?", time.Now().Add(-time.Hour*24)).Find(&checks24h)
-	db.Order("created_at DESC").Group("check_id").Where("created_at >= ?", time.Now().Add(-time.Hour*24*7)).Find(&checks7d)
+
+	q := db.Select(`
+		id, 
+		created_at, 
+		updated_at, 
+		deleted_at, 
+		addr, 
+		ip, 
+		packet_loss,
+		CAST(AVG(latency) AS INT) latency,
+		success, 
+		check_id,
+		strftime('%Y-%m-%dT%H:00:00.000', created_at) || '_' || success created_hour`)
+	q.Order("created_at DESC")
+	q.Group("created_hour")
+	q.Where("created_at >= ?", time.Now().Add(-time.Hour*24*7))
+	q.Find(&checks7d)
 
 	chartData := ChartData{}
 
