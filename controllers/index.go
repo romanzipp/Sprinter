@@ -28,9 +28,24 @@ type ChartData struct {
 	Points7d  []ChartDataPoint `json:"7d"`
 }
 
+const FilterAll = "all"
+const FilterFailed = "failed"
+
 func IndexController(c *gin.Context, db *gorm.DB) {
 	var checks []models.Check
-	db.Order("created_at DESC").Limit(100).Find(&checks)
+
+	filter := FilterAll
+	if c.Query("filter") == "failed" {
+		filter = FilterFailed
+	}
+
+	latestQuery := db.Order("created_at DESC").Limit(100)
+
+	if filter == FilterFailed {
+		latestQuery.Where("success = 0")
+	}
+
+	latestQuery.Find(&checks)
 
 	stats := Stats{}
 
@@ -93,5 +108,6 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 		"stats":  stats,
 		"chart":  string(chartDataJson),
 		"up":     up,
+		"filter": filter,
 	})
 }

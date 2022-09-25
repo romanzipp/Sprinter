@@ -52,6 +52,15 @@
                 Latest Checks
             </h1>
 
+            <div class="flex space-x-2 mb-6">
+                <a class="px-4 py-2 font-semibold text-xs text-gray-600 uppercase transition-colors duration-150 rounded-md {{if eq .filter "all"}}bg-blue-100 hover:bg-blue-200{{else}}bg-gray-100 hover:bg-gray-200{{end}}" href="/">
+                    All
+                </a>
+                <a class="px-4 py-2 font-semibold text-xs text-gray-600 uppercase transition-colors duration-150 rounded-md {{if eq .filter "failed"}}bg-blue-100 hover:bg-blue-200{{else}}bg-gray-100 hover:bg-gray-200{{end}}" href="/?filter=failed">
+                    Only failed
+                </a>
+            </div>
+
             <table>
                 <thead>
                 <tr>
