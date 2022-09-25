@@ -81,11 +81,17 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 	}
 
 	chartDataJson, _ := json.Marshal(chartData)
+	up := true
+
+	if len(checks24h) > 0 {
+		up = checks24h[len(checks24h)-1].Success
+	}
 
 	c.HTML(http.StatusOK, "index", gin.H{
 		"title":  "Home",
 		"checks": checks,
 		"stats":  stats,
 		"chart":  string(chartDataJson),
+		"up":     up,
 	})
 }
