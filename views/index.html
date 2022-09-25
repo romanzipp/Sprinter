@@ -52,6 +52,30 @@
             </div>
             <div id="chart-7d" class="mt-6" style="width: 100%; height: 250px;"></div>
         </div>
+
+        <div class="card">
+            <h1 class="mb-6 text-2xl">
+                Last 30 days
+            </h1>
+            <div class="flex w-full">
+                <div class="flex-1 space-y-2 text-center">
+                    <div class="text-4xl">{{.printer.Sprintf "%d" .stats.ChecksLast30Days}}</div>
+                    <div class="text-gray-500 text-sm">Checks</div>
+                </div>
+                <div class="flex-1 space-y-2 text-center">
+                    <div class="text-4xl text-green-600">{{.printer.Sprintf "%d" .stats.SuccessLast30Days}}</div>
+                    <div class="text-gray-500 text-sm">Success</div>
+                </div>
+                <div class="flex-1 space-y-2 text-center">
+                    <div class="text-4xl text-red-600">{{.printer.Sprintf "%d" .stats.ErrorLast30Days}}</div>
+                    <div class="text-gray-500 text-sm">Errors</div>
+                </div>
+                <div class="flex-1 space-y-2 text-center">
+                    <div class="text-4xl">{{printf "%.2f" .stats.Uptime30Days}} %</div>
+                    <div class="text-gray-500 text-sm">Uptime</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="w-full md:w-1/2 px-2">

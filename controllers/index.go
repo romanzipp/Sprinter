@@ -16,10 +16,16 @@ type Stats struct {
 	SuccessLast24Hours int64
 	ErrorLast24Hours   int64
 	Uptime24Hours      float64
-	ChecksLast7Days    int64
-	SuccessLast7Days   int64
-	ErrorLast7Days     int64
-	Uptime7Days        float64
+
+	ChecksLast7Days  int64
+	SuccessLast7Days int64
+	ErrorLast7Days   int64
+	Uptime7Days      float64
+
+	ChecksLast30Days  int64
+	SuccessLast30Days int64
+	ErrorLast30Days   int64
+	Uptime30Days      float64
 }
 
 type ChartDataPoint struct {
@@ -61,6 +67,10 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 	db.Table("checks").Where("created_at >= ?", time.Now().Add(-time.Hour*24*7)).Where("success = 1").Count(&stats.SuccessLast7Days)
 	db.Table("checks").Where("created_at >= ?", time.Now().Add(-time.Hour*24*7)).Where("success = 0").Count(&stats.ErrorLast7Days)
 
+	db.Table("checks").Where("created_at >= ?", time.Now().Add(-time.Hour*24*30)).Count(&stats.ChecksLast30Days)
+	db.Table("checks").Where("created_at >= ?", time.Now().Add(-time.Hour*24*30)).Where("success = 1").Count(&stats.SuccessLast30Days)
+	db.Table("checks").Where("created_at >= ?", time.Now().Add(-time.Hour*24*30)).Where("success = 0").Count(&stats.ErrorLast30Days)
+
 	if stats.ChecksLast24Hours == 0 {
 		stats.Uptime24Hours = 0.0
 	} else {
@@ -71,6 +81,12 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 		stats.Uptime7Days = 0.0
 	} else {
 		stats.Uptime7Days = float64(stats.SuccessLast7Days) / float64(stats.ChecksLast7Days) * 100.0
+	}
+
+	if stats.ChecksLast30Days == 0 {
+		stats.Uptime30Days = 0.0
+	} else {
+		stats.Uptime30Days = float64(stats.SuccessLast30Days) / float64(stats.ChecksLast30Days) * 100.0
 	}
 
 	var checks24h []models.Check
