@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/romanzipp/sprinter/models"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 	"gorm.io/gorm"
 	"net/http"
 	"time"
@@ -117,11 +119,12 @@ func IndexController(c *gin.Context, db *gorm.DB) {
 	}
 
 	c.HTML(http.StatusOK, "index", gin.H{
-		"title":  "Home",
-		"checks": checks,
-		"stats":  stats,
-		"chart":  string(chartDataJson),
-		"up":     up,
-		"filter": filter,
+		"title":   "Home",
+		"checks":  checks,
+		"stats":   stats,
+		"chart":   string(chartDataJson),
+		"up":      up,
+		"filter":  filter,
+		"printer": message.NewPrinter(language.English),
 	})
 }

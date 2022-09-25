@@ -9,15 +9,15 @@
             </h1>
             <div class="flex w-full">
                 <div class="flex-1 space-y-2 text-center">
-                    <div class="text-4xl">{{.stats.ChecksLast24Hours}}</div>
+                    <div class="text-4xl">{{.printer.Sprintf "%d" .stats.ChecksLast24Hours}}</div>
                     <div class="text-gray-500 text-sm">Checks</div>
                 </div>
                 <div class="flex-1 space-y-2 text-center">
-                    <div class="text-4xl text-green-600">{{.stats.SuccessLast24Hours}}</div>
+                    <div class="text-4xl text-green-600">{{.printer.Sprintf "%d" .stats.SuccessLast24Hours}}</div>
                     <div class="text-gray-500 text-sm">Success</div>
                 </div>
                 <div class="flex-1 space-y-2 text-center">
-                    <div class="text-4xl text-red-600">{{.stats.ErrorLast24Hours}}</div>
+                    <div class="text-4xl text-red-600">{{.printer.Sprintf "%d" .stats.ErrorLast24Hours}}</div>
                     <div class="text-gray-500 text-sm">Errors</div>
                 </div>
                 <div class="flex-1 space-y-2 text-center">
@@ -34,15 +34,15 @@
             </h1>
             <div class="flex w-full">
                 <div class="flex-1 space-y-2 text-center">
-                    <div class="text-4xl">{{.stats.ChecksLast7Days}}</div>
+                    <div class="text-4xl">{{.printer.Sprintf "%d" .stats.ChecksLast7Days}}</div>
                     <div class="text-gray-500 text-sm">Checks</div>
                 </div>
                 <div class="flex-1 space-y-2 text-center">
-                    <div class="text-4xl text-green-600">{{.stats.SuccessLast7Days}}</div>
+                    <div class="text-4xl text-green-600">{{.printer.Sprintf "%d" .stats.SuccessLast7Days}}</div>
                     <div class="text-gray-500 text-sm">Success</div>
                 </div>
                 <div class="flex-1 space-y-2 text-center">
-                    <div class="text-4xl text-red-600">{{.stats.ErrorLast7Days}}</div>
+                    <div class="text-4xl text-red-600">{{.printer.Sprintf "%d" .stats.ErrorLast7Days}}</div>
                     <div class="text-gray-500 text-sm">Errors</div>
                 </div>
                 <div class="flex-1 space-y-2 text-center">
