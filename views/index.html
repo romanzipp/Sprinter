@@ -151,6 +151,9 @@
     }
 
     const extractDowntime = (points) => {
+        if (!Array.isArray(points)) {
+            return [];
+        }
         const downtimes = [];
 
         let lastDownDate = null;
@@ -186,6 +189,10 @@
     };
 
     const transformData = (points) => {
+        if (!Array.isArray(points)) {
+            return []
+        }
+
         return points.map(point => [+new Date(point.date), point.value]);
     }
 
