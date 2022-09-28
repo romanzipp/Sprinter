@@ -4,12 +4,29 @@
 
 ## Features
 
-- Monitor network uptime
-- Pings & Speed test
+- Continuously monitors network availability with Pings to configurated servers
+- Web UI with interactive charts
 
 Built with [Go](https://go.dev/) and [SQLite](https://sqlite.org/).
 
-## Docker
+## Usage (Docker)
+
+```
+docker pull ghcr.io/romanzipp/sprinter:latest
+```
+
+See [repository](https://github.com/romanzipp/Sprinter/pkgs/container/sprinter) for more information.
+
+### Environment variables
+
+- `INTERVAL` Ping interval in seconds (default: `60`)
+- `PING_HOSTS` Destination servers, separated by comma (default: `1.1.1.1,google.com`)
+- `PING_TIMEOUT` Ping timeout in seconds (default: `5`)
+- `PING_PRIVILEGED` Privileged UDP ping mode (see [Troubleshooting](#troubleshooting))
+
+---
+
+### Local
 
 #### Build
 
@@ -62,6 +79,9 @@ yarn install
 ```shell
 yarn watch
 ```
+## Roadmap
+
+- [ ] Make ping timeout configurable
 
 ## Troubleshooting
 
