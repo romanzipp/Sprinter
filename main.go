@@ -40,6 +40,10 @@ func main() {
 	)
 
 	conf := makeConfig()
+	if len(conf.PingHosts) == 0 {
+		panic("no ping hosts configured")
+	}
+
 	db := makeDb()
 	router := makeRouter(db)
 
