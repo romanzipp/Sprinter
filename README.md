@@ -11,6 +11,14 @@ Built with [Go](https://go.dev/) and [SQLite](https://sqlite.org/).
 
 ## Docker
 
+```
+docker pull ghcr.io/romanzipp/sprinter:latest
+```
+
+See [repository](https://github.com/romanzipp/Sprinter/pkgs/container/sprinter) for more information.
+
+### Local
+
 #### Build
 
 ```shell
