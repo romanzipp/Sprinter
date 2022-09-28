@@ -50,6 +50,10 @@ func main() {
 
 func makeConfig() config.Config {
 	interval, _ := strconv.ParseInt(os.Getenv("INTERVAL"), 10, 64)
+	if interval == 0 {
+		interval = 60
+	}
+
 	timeout, _ := strconv.ParseInt(os.Getenv("PING_TIMEOUT"), 10, 64)
 	if timeout == 0 {
 		timeout = 5
