@@ -30,7 +30,7 @@ func ExecPingCheck(host string, id string, conf config.Config, db *gorm.DB) {
 	}
 
 	pinger.Count = 1
-	pinger.Timeout = 5 * time.Second
+	pinger.Timeout = time.Duration(conf.PingTimeout) * time.Second
 	pinger.Debug = true
 	err = pinger.Run()
 	if err != nil {

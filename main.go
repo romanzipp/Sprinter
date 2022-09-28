@@ -40,6 +40,10 @@ func main() {
 	)
 
 	conf := makeConfig()
+	if len(conf.PingHosts) == 0 {
+		panic("no ping hosts configured")
+	}
+
 	db := makeDb()
 	router := makeRouter(db)
 
@@ -50,11 +54,21 @@ func main() {
 
 func makeConfig() config.Config {
 	interval, _ := strconv.ParseInt(os.Getenv("INTERVAL"), 10, 64)
+	if interval == 0 {
+		interval = 60
+	}
+
+	timeout, _ := strconv.ParseInt(os.Getenv("PING_TIMEOUT"), 10, 64)
+	if timeout == 0 {
+		timeout = 5
+	}
+
 	pingHosts := strings.Split(os.Getenv("PING_HOSTS"), ",")
 
 	return config.Config{
 		Interval:       interval,
 		PingHosts:      pingHosts,
+		PingTimeout:    timeout,
 		PingPrivileged: os.Getenv("PING_PRIVILEGED") == "true",
 	}
 }
