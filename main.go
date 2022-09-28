@@ -50,11 +50,17 @@ func main() {
 
 func makeConfig() config.Config {
 	interval, _ := strconv.ParseInt(os.Getenv("INTERVAL"), 10, 64)
+	timeout, _ := strconv.ParseInt(os.Getenv("PING_TIMEOUT"), 10, 64)
+	if timeout == 0 {
+		timeout = 5
+	}
+
 	pingHosts := strings.Split(os.Getenv("PING_HOSTS"), ",")
 
 	return config.Config{
 		Interval:       interval,
 		PingHosts:      pingHosts,
+		PingTimeout:    timeout,
 		PingPrivileged: os.Getenv("PING_PRIVILEGED") == "true",
 	}
 }
